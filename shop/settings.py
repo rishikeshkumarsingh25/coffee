@@ -19,21 +19,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DJANGO CORE SETTINGS
 # =====================================
 
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config(
+    'SECRET_KEY',
+    default='django-insecure-!v8mbgv+%k+t9m3nu+_6w-j9!v#!xeekjlm%bh&%s+jd_zj7!c'
+)
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config(
+raw_hosts = config(
     'ALLOWED_HOSTS',
-    default='localhost,127.0.0.1,testserver',
+    default='localhost,127.0.0.1,testserver,.onrender.com',
     cast=Csv()
 )
+ALLOWED_HOSTS = list(raw_hosts)
+for h in ['localhost', '127.0.0.1', 'testserver', '.onrender.com']:
+    if h not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(h)
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
-    default='',
+    default='https://*.onrender.com,http://localhost:8000,http://127.0.0.1:8000',
     cast=Csv()
 )
+CSRF_TRUSTED_ORIGINS = list(CSRF_TRUSTED_ORIGINS)
+
+if RENDER_EXTERNAL_HOSTNAME:
+    https_origin = f'https://{RENDER_EXTERNAL_HOSTNAME}'
+    if https_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(https_origin)
 
 
 # =====================================
@@ -44,7 +61,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SECURE_SSL_REDIRECT = config(
     'SECURE_SSL_REDIRECT',
-    default=not DEBUG,
+    default=False,
     cast=bool
 )
 
@@ -146,43 +163,43 @@ elif DB_ENGINE == 'mysql':
     DB_PORT = config('DB_PORT', default=3306, cast=int)
 
     if not all([DB_NAME, DB_USER, DB_PASSWORD, DB_HOST]):
-        raise ValueError(
-            'MySQL environment variables are missing. '
-            'Check DB_NAME, DB_USER, DB_PASSWORD and DB_HOST.'
-        )
-
-    DB_SSL_CA = config(
-        'DB_SSL_CA',
-        default=str(BASE_DIR / 'ca.pem')
-    )
-
-    DATABASE_OPTIONS = {
-        'charset': 'utf8mb4',
-    }
-
-    if DB_SSL_CA and Path(DB_SSL_CA).is_file():
-        DATABASE_OPTIONS['ssl'] = {
-            'ca': DB_SSL_CA,
+        # Graceful fallback to sqlite3 during build/collectstatic if MySQL credentials are not yet set
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
         }
     else:
-        # Enable encrypted MySQL connection when CA file
-        # is not available. Add Aiven CA certificate for
-        # certificate verification.
-        DATABASE_OPTIONS['ssl'] = {}
+        DB_SSL_CA = config(
+            'DB_SSL_CA',
+            default=str(BASE_DIR / 'ca.pem')
+        )
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': DB_NAME,
-            'USER': DB_USER,
-            'PASSWORD': DB_PASSWORD,
-            'HOST': DB_HOST,
-            'PORT': DB_PORT,
-            'OPTIONS': DATABASE_OPTIONS,
-            'CONN_MAX_AGE': 60,
-            'CONN_HEALTH_CHECKS': True,
+        DATABASE_OPTIONS = {
+            'charset': 'utf8mb4',
         }
-    }
+
+        if DB_SSL_CA and Path(DB_SSL_CA).is_file():
+            DATABASE_OPTIONS['ssl'] = {
+                'ca': DB_SSL_CA,
+            }
+        else:
+            DATABASE_OPTIONS['ssl'] = {}
+
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': DB_NAME,
+                'USER': DB_USER,
+                'PASSWORD': DB_PASSWORD,
+                'HOST': DB_HOST,
+                'PORT': DB_PORT,
+                'OPTIONS': DATABASE_OPTIONS,
+                'CONN_MAX_AGE': 60,
+                'CONN_HEALTH_CHECKS': True,
+            }
+        }
 
 else:
     raise ValueError(
@@ -239,7 +256,7 @@ STORAGES = {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
 }
 
