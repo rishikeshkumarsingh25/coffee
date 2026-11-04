@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Customer Sign Up - KOPPEE Coffee Shop{% endblock %}
+
+{% block extra_head %}
+<style>
+    .customer-auth-container {
+        padding: 50px 0 80px;
+    }
+    .customer-card {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 42px 38px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 15px 45px rgba(51, 33, 29, 0.12);
+        border-top: 5px solid #da9f5b;
+        position: relative;
+    }
+    .customer-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(218, 159, 91, 0.15);
+        color: #b87528;
+        border: 1px solid rgba(218, 159, 91, 0.4);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+    .customer-title {
+        color: #33211d;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 26px;
+        margin-bottom: 6px;
+    }
+    .customer-subtitle {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+    .otp-info-callout {
+        background: #eef2ff;
+        border-left: 4px solid #6366f1;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #3730a3;
+        margin-bottom: 24px;
+        text-align: left;
+    }
+    .customer-card .form-control {
+        height: 52px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        font-size: 15px;
+        transition: all 0.2s;
+    }
+    .customer-card .form-control:focus {
+        border-color: #da9f5b;
+        box-shadow: 0 0 0 3px rgba(218, 159, 91, 0.2);
+    }
+    .customer-card .input-group-text {
+        background: #fdfbf7;
+        border: 1px solid #e2e8f0;
+        border-right: none;
+        color: #da9f5b;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        padding: 0 16px;
+    }
+    .btn-customer-signup {
+        background: #da9f5b;
+        border-color: #da9f5b;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 1px;
+        padding: 14px;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+    .btn-customer-signup:hover {
+        background: #c4833f;
+        border-color: #c4833f;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(218, 159, 91, 0.35);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container customer-auth-container">
+    <div class="customer-card">
+        <!-- Header -->
+        <div class="text-center">
+            <span class="customer-badge">
+                <i class="fa fa-user-plus"></i> Customer Registration
+            </span>
+            <h3 class="customer-title">Join KOPPEE</h3>
+            <p class="customer-subtitle">Create a customer account to reserve tables &amp; enjoy special offers</p>
+        </div>
+
+        <!-- Info callout explaining OTP -->
+        <div class="otp-info-callout">
+            <i class="fa fa-envelope-open-text mr-1"></i>
+            <strong>Email OTP Verification:</strong> We will send a 6-digit confirmation code to your email. Once verified, you can log in anytime with just your email and password!
+        </div>
+
+        <!-- Form -->
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+
+            <div class="form-group mb-3">
+                <label class="font-weight-bold small text-muted">EMAIL ADDRESS *</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                    </div>
+                    <input type="email" name="email" class="form-control" placeholder="name@example.com" required autofocus autocomplete="email">
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="font-weight-bold small text-muted">PASSWORD (MIN 6 CHARACTERS) *</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    </div>
+                    <input type="password" name="password" class="form-control" placeholder="Create your password" minlength="6" required autocomplete="new-password">
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="font-weight-bold small text-muted">CONFIRM PASSWORD *</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-check-double"></i></span>
+                    </div>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="Confirm your password" minlength="6" required autocomplete="new-password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-customer-signup btn-block">
+                <i class="fa fa-paper-plane mr-2"></i> Send Verification OTP &amp; Register
+            </button>
+        </form>
+
+        <div class="text-center mt-4 pt-3 border-top">
+            <p class="text-muted small mb-0">
+                Already registered? <a href="{% url 'login' %}" class="font-weight-bold" style="color: #da9f5b;">Sign In with Email &amp; Password</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

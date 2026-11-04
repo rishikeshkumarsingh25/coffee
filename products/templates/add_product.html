@@ -1,0 +1,85 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Add Product - KOPPEE Admin{% endblock %}
+{% block page_title %}Add New Coffee Product{% endblock %}
+{% block menu_add_product %}active{% endblock %}
+
+{% block admin_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="m-0 font-weight-bold text-dark">Product Details</h5>
+                <a href="{% url 'product_list' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-arrow-left mr-1"></i> Back to Products
+                </a>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold text-muted small">PRODUCT NAME *</label>
+                        <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. Caramel Macchiato" required value="{{ form.name.value|default:'' }}">
+                        {% if form.name.errors %}<small class="text-danger">{{ form.name.errors.0 }}</small>{% endif %}
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-bold text-muted small">CATEGORY *</label>
+                            <select name="category" class="custom-select custom-select-lg" required>
+                                <option value="Hot Coffee" {% if form.category.value == 'Hot Coffee' %}selected{% endif %}>Hot Coffee</option>
+                                <option value="Cold Coffee" {% if form.category.value == 'Cold Coffee' %}selected{% endif %}>Cold Coffee</option>
+                            </select>
+                            {% if form.category.errors %}<small class="text-danger">{{ form.category.errors.0 }}</small>{% endif %}
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-bold text-muted small">PRICE (₹) *</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold">₹</span>
+                                </div>
+                                <input type="number" step="0.01" name="price" class="form-control form-control-lg" placeholder="150.00" required value="{{ form.price.value|default:'' }}">
+                            </div>
+                            {% if form.price.errors %}<small class="text-danger">{{ form.price.errors.0 }}</small>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold text-muted small">DESCRIPTION</label>
+                        <textarea name="description" rows="4" class="form-control" placeholder="Describe the coffee roast, flavour notes, and ingredients...">{{ form.description.value|default:'' }}</textarea>
+                        {% if form.description.errors %}<small class="text-danger">{{ form.description.errors.0 }}</small>{% endif %}
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="font-weight-bold text-muted small">PRODUCT IMAGE</label>
+                        <div class="custom-file">
+                            <input type="file" name="image" class="custom-file-input" id="productImageInput" accept="image/*">
+                            <label class="custom-file-label" for="productImageInput">Choose coffee image...</label>
+                        </div>
+                        <small class="form-text text-muted">Recommended: High quality JPG/PNG image (min 400x400px).</small>
+                        {% if form.image.errors %}<small class="text-danger">{{ form.image.errors.0 }}</small>{% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-2">
+                        <a href="{% url 'product_list' %}" class="btn btn-light px-4 mr-2">Cancel</a>
+                        <button type="submit" class="btn btn-warning px-5 font-weight-bold text-white shadow-sm" style="background-color: #da9f5b; border-color: #da9f5b;">
+                            <i class="fa fa-save mr-2"></i> Save Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $('#productImageInput').on('change', function() {
+        var fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+</script>
+{% endblock %}

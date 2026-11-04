@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}KOPPEE - Premium Coffee Shop{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="KOPPEE Coffee Shop" name="keywords">
+    <meta content="Fresh & Organic Roasted Coffee Beans" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+
+    <style>
+        .django-messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 420px;
+            width: 90%;
+        }
+        .user-badge {
+            background: rgba(218, 159, 91, 0.2);
+            color: #da9f5b !important;
+            border: 1px solid #da9f5b;
+            border-radius: 20px;
+            padding: 5px 12px !important;
+            font-size: 13px;
+            margin: auto 6px;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <!-- Floating Notifications -->
+    {% if messages %}
+    <div class="django-messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show shadow-lg" role="alert">
+            <strong>
+                {% if message.tags == 'success' %}<i class="fa fa-check-circle mr-2"></i>
+                {% elif message.tags == 'error' %}<i class="fa fa-exclamation-triangle mr-2"></i>
+                {% elif message.tags == 'warning' %}<i class="fa fa-exclamation-circle mr-2"></i>
+                {% else %}<i class="fa fa-info-circle mr-2"></i>{% endif %}
+            </strong>
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+        <nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+            <a href="{% url 'home' %}" class="navbar-brand px-lg-4 m-0">
+                <h1 class="m-0 display-4 text-uppercase text-white">KOPPEE</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto p-4 align-items-center">
+                    <a href="{% url 'home' %}" class="nav-item nav-link {% block nav_home %}{% endblock %}">Home</a>
+                    <a href="{% url 'about' %}" class="nav-item nav-link {% block nav_about %}{% endblock %}">About</a>
+                    <a href="{% url 'service' %}" class="nav-item nav-link {% block nav_service %}{% endblock %}">Service</a>
+                    <a href="{% url 'menu' %}" class="nav-item nav-link {% block nav_menu %}{% endblock %}">Menu</a>
+                    <a href="{% url 'reservation' %}" class="nav-item nav-link {% block nav_reservation %}{% endblock %}">Reservation</a>
+                    <a href="{% url 'contact' %}" class="nav-item nav-link {% block nav_contact %}{% endblock %}">Contact</a>
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">More</a>
+                        <div class="dropdown-menu text-capitalize">
+                            <a href="{% url 'testimonial' %}" class="dropdown-item">Testimonials</a>
+                            <a href="{% url 'menu' %}" class="dropdown-item">All Products</a>
+                        </div>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff or user.is_superuser %}
+                            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-sm ml-lg-2 px-3 py-2 font-weight-bold">
+                                <i class="fa fa-tachometer-alt mr-1"></i> Dashboard
+                            </a>
+                            <span class="user-badge d-none d-lg-inline-block" style="border-color: #f59e0b; background: rgba(245, 158, 11, 0.15); color: #d97706 !important;">
+                                <i class="fa fa-shield-alt mr-1"></i> Admin: {{ user.email|truncatechars:18 }}
+                            </span>
+                        {% else %}
+                            <span class="user-badge d-none d-lg-inline-block">
+                                <i class="fa fa-user-circle mr-1"></i> Customer: {{ user.email|truncatechars:18 }}
+                            </span>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" class="nav-item nav-link text-danger font-weight-bold ml-2">
+                            <i class="fa fa-sign-out-alt"></i> Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="nav-item nav-link font-weight-bold ml-lg-2">
+                            <i class="fa fa-user mr-1"></i> Customer Login
+                        </a>
+                        <a href="{% url 'signup' %}" class="btn btn-secondary btn-sm ml-lg-2 px-3 py-2 font-weight-bold">
+                            Sign Up
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer Start -->
+    <div class="container-fluid footer text-white mt-5 pt-5 px-0 position-relative overlay-top">
+        <div class="row mx-0 pt-5 px-sm-3 px-lg-5 mt-4">
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-white text-uppercase mb-4" style="letter-spacing: 3px;">Get In Touch</h4>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>123 Coffee Lane, New York, USA</p>
+                <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
+                <p class="m-0"><i class="fa fa-envelope mr-2"></i>info@koppee.com</p>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-white text-uppercase mb-4" style="letter-spacing: 3px;">Follow Us</h4>
+                <p>Stay connected with us on social media for daily specials and updates.</p>
+                <div class="d-flex justify-content-start">
+                    <a class="btn btn-lg btn-outline-light btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-lg btn-outline-light btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-lg btn-outline-light btn-lg-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-lg btn-outline-light btn-lg-square" href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-white text-uppercase mb-4" style="letter-spacing: 3px;">Open Hours</h4>
+                <div>
+                    <h6 class="text-white text-uppercase">Monday - Friday</h6>
+                    <p>8.00 AM - 8.00 PM</p>
+                    <h6 class="text-white text-uppercase">Saturday - Sunday</h6>
+                    <p>2.00 PM - 8.00 PM</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-white text-uppercase mb-4" style="letter-spacing: 3px;">Newsletter</h4>
+                <p>Subscribe for exclusive discounts, new roast releases and recipes.</p>
+                <div class="w-100">
+                    <form action="{% url 'contact' %}" method="GET">
+                        <div class="input-group">
+                            <input type="email" name="email" class="form-control border-light" style="padding: 25px;" placeholder="Your Email" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary font-weight-bold px-3" type="submit">Sign Up</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid text-center text-white border-top mt-4 py-4 px-sm-3 px-md-5" style="border-color: rgba(256, 256, 256, .1) !important;">
+            <p class="mb-2 text-white">&copy; <a class="font-weight-bold text-primary" href="{% url 'home' %}">KOPPEE</a>. All Rights Reserved.</p>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

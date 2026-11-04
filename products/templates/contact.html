@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - KOPPEE Coffee Shop{% endblock %}
+{% block nav_contact %}active{% endblock %}
+
+{% block content %}
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 position-relative overlay-bottom">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+        <h1 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase">Contact Us</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" href="{% url 'home' %}">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Contact</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Contact Start -->
+<div class="container-fluid pt-5">
+    <div class="container">
+        <div class="section-title">
+            <h4 class="text-primary text-uppercase" style="letter-spacing: 5px;">Contact Us</h4>
+            <h1 class="display-4">Feel Free To Reach Out</h1>
+        </div>
+        <div class="row px-3 pb-2">
+            <div class="col-sm-4 text-center mb-4">
+                <i class="fa fa-2x fa-map-marker-alt mb-3 text-primary"></i>
+                <h4 class="font-weight-bold">Address</h4>
+                <p class="text-muted">123 Coffee Lane, New York, USA</p>
+            </div>
+            <div class="col-sm-4 text-center mb-4">
+                <i class="fa fa-2x fa-phone-alt mb-3 text-primary"></i>
+                <h4 class="font-weight-bold">Phone</h4>
+                <p class="text-muted">+012 345 6789</p>
+            </div>
+            <div class="col-sm-4 text-center mb-4">
+                <i class="far fa-2x fa-envelope mb-3 text-primary"></i>
+                <h4 class="font-weight-bold">Email</h4>
+                <p class="text-muted">info@koppee.com</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 pb-5">
+                <iframe style="width: 100%; height: 443px; border-radius: 8px;"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001156.4288297426!2d-78.01371936852176!3d42.72876761954724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4ccc4bf0f123a5a9%3A0xddcfc6c1de189567!2sNew%20York%2C%20USA!5e0!3m2!1sen!2sbd!4v1603794290143!5m2!1sen!2sbd"
+                    frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div>
+            <div class="col-md-6 pb-5">
+                <div class="contact-form bg-light p-4 rounded shadow-sm">
+                    <form method="POST" action="{% url 'contact' %}">
+                        {% csrf_token %}
+
+                        <div class="form-group mb-3">
+                            <input type="text" class="form-control p-4 border-0" name="name" placeholder="Your Name" required="required" value="{% if user.is_authenticated %}{{ user.first_name }} {{ user.last_name|default:'' }}{% endif %}" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <input type="email" class="form-control p-4 border-0" name="email" placeholder="Your Email" required="required" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <input type="text" class="form-control p-4 border-0" name="subject" placeholder="Subject" required="required" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <textarea class="form-control py-3 px-4 border-0" rows="5" name="message" placeholder="Your Message..." required="required"></textarea>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-primary font-weight-bold py-3 px-5 btn-block" type="submit">
+                                <i class="fa fa-paper-plane mr-2"></i> Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contact End -->
+{% endblock %}

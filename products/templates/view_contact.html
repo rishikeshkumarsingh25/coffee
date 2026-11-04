@@ -1,0 +1,59 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}View Inquiry - KOPPEE Admin{% endblock %}
+{% block page_title %}Inquiry Details{% endblock %}
+{% block menu_contacts %}active{% endblock %}
+
+{% block admin_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="m-0 font-weight-bold text-dark">
+                    <i class="fa fa-envelope text-primary mr-2"></i> Message #{{ contact.id }}
+                </h5>
+                <a href="{% url 'contacts_page' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-arrow-left mr-1"></i> Back to Inquiries
+                </a>
+            </div>
+            <div class="card-body p-4">
+                <table class="table table-bordered mb-4">
+                    <tbody>
+                        <tr>
+                            <th class="bg-light" style="width: 30%;">Sender Name</th>
+                            <td><strong class="text-dark">{{ contact.name }}</strong></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Sender Email</th>
+                            <td><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Subject</th>
+                            <td><span class="badge badge-light border font-weight-bold">{{ contact.subject }}</span></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light align-top">Full Message</th>
+                            <td style="white-space: pre-wrap;">{{ contact.message }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <form action="{% url 'delete_contact' contact.pk %}" method="POST" onsubmit="return confirm('Delete this inquiry?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fa fa-trash mr-1"></i> Delete
+                        </button>
+                    </form>
+                    <div>
+                        <a href="{% url 'contacts_page' %}" class="btn btn-light px-3 mr-2">Back</a>
+                        <a href="mailto:{{ contact.email }}?subject=Re: {{ contact.subject|urlencode }}" class="btn btn-primary px-4">
+                            <i class="fa fa-reply mr-1"></i> Reply via Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

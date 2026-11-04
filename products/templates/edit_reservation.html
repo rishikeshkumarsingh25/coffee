@@ -1,0 +1,58 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Edit Reservation - KOPPEE Admin{% endblock %}
+{% block page_title %}Edit Reservation #{{ reservation.id }}{% endblock %}
+{% block menu_reservations %}active{% endblock %}
+
+{% block admin_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="m-0 font-weight-bold text-dark">Modify Reservation</h5>
+                <a href="{% url 'reservations_page' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-arrow-left mr-1"></i> Back
+                </a>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold text-muted small">GUEST NAME *</label>
+                        <input type="text" name="name" class="form-control" required value="{{ reservation.name }}">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold text-muted small">EMAIL ADDRESS *</label>
+                        <input type="email" name="email" class="form-control" required value="{{ reservation.email }}">
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-bold text-muted small">DATE *</label>
+                            <input type="date" name="date" class="form-control" required value="{{ reservation.date|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-bold text-muted small">TIME *</label>
+                            <input type="time" name="time" class="form-control" required value="{{ reservation.time|time:'H:i' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="font-weight-bold text-muted small">NUMBER OF GUESTS *</label>
+                        <input type="number" name="person" class="form-control" min="1" max="50" required value="{{ reservation.person }}">
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'reservations_page' %}" class="btn btn-light px-3 mr-2">Cancel</a>
+                        <button type="submit" class="btn btn-warning px-4 font-weight-bold text-white" style="background-color: #da9f5b; border-color: #da9f5b;">
+                            <i class="fa fa-check mr-1"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

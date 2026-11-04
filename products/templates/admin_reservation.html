@@ -1,0 +1,87 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Reservations - KOPPEE Admin{% endblock %}
+{% block page_title %}Table Reservations Management{% endblock %}
+{% block menu_reservations %}active{% endblock %}
+
+{% block admin_content %}
+<div class="card shadow-sm border-0" style="border-radius: 12px;">
+    <div class="card-header bg-white py-3 border-bottom d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h5 class="m-0 font-weight-bold text-dark">Booked Tables</h5>
+            <small class="text-muted">Total: {{ all_reservations|length }} bookings</small>
+        </div>
+        <div>
+            <input type="text" id="resSearch" class="form-control form-control-sm" placeholder="Search by name or email..." style="max-width: 250px;">
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="resTable">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Guest</th>
+                        <th>Email</th>
+                        <th>Reservation Date</th>
+                        <th>Time</th>
+                        <th>Guests</th>
+                        <th class="text-right" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in all_reservations %}
+                    <tr>
+                        <td><strong class="text-dark">{{ res.name }}</strong></td>
+                        <td><a href="mailto:{{ res.email }}" class="text-secondary">{{ res.email }}</a></td>
+                        <td>
+                            <span class="badge badge-light border px-2 py-1 font-weight-bold">
+                                <i class="fa fa-calendar-alt text-warning mr-1"></i> {{ res.date }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-dark"><i class="fa fa-clock text-muted mr-1"></i> {{ res.time }}</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-info px-2 py-1">{{ res.person }} Guests</span>
+                        </td>
+                        <td class="text-right">
+                            <a href="{% url 'view_reservation' res.pk %}" class="btn btn-sm btn-outline-info" title="View Details">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <a href="{% url 'edit_reservation' res.pk %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <form action="{% url 'delete_reservation' res.pk %}" method="POST" style="display: inline;" onsubmit="return confirm('Cancel and delete this reservation for {{ res.name|escapejs }}?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fa fa-calendar-times fa-3x mb-3 text-secondary"></i>
+                            <p class="mb-0">No reservations currently recorded.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $('#resSearch').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#resTable tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+</script>
+{% endblock %}

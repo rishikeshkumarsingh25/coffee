@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - KOPPEE Coffee Shop{% endblock %}
+{% block nav_about %}active{% endblock %}
+
+{% block content %}
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 position-relative overlay-bottom">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+        <h1 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase">About Us</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" href="{% url 'home' %}">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">About Us</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- About Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="section-title">
+            <h4 class="text-primary text-uppercase" style="letter-spacing: 5px;">About Us</h4>
+            <h1 class="display-4">Serving Since 1950</h1>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 py-0 py-lg-5">
+                <h1 class="mb-3">Our Story</h1>
+                <h5 class="mb-3">Rich, artisanal coffee freshly brewed from ethically sourced high-altitude beans.</h5>
+                <p>For decades, KOPPEE has been a cozy haven for coffee enthusiasts. Every cup tells a story of passion, tradition, and the art of bean roasting perfected over generations.</p>
+                <a href="{% url 'menu' %}" class="btn btn-secondary font-weight-bold py-2 px-4 mt-2">Explore Menu</a>
+            </div>
+            <div class="col-lg-4 py-5 py-lg-0" style="min-height: 500px;">
+                <div class="position-relative h-100">
+                    <img class="position-absolute w-100 h-100" src="{% static 'img/about.png' %}" style="object-fit: cover; border-radius: 8px;">
+                </div>
+            </div>
+            <div class="col-lg-4 py-0 py-lg-5">
+                <h1 class="mb-3">Our Vision</h1>
+                <p>We believe in sustainable agriculture, fair wages for farmers, and delivering the absolute finest espresso, pour-overs, and specialty drinks to every guest.</p>
+                <h5 class="mb-3"><i class="fa fa-check text-primary mr-3"></i>100% Single Origin Arabica</h5>
+                <h5 class="mb-3"><i class="fa fa-check text-primary mr-3"></i>Small Batch Artisanal Roasting</h5>
+                <h5 class="mb-3"><i class="fa fa-check text-primary mr-3"></i>Master Baristas & Hospitality</h5>
+                <a href="{% url 'reservation' %}" class="btn btn-primary font-weight-bold py-2 px-4 mt-2">Book a Table</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+{% endblock %}

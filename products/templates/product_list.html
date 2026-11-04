@@ -1,0 +1,99 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Products Management - KOPPEE Admin{% endblock %}
+{% block page_title %}Products Management{% endblock %}
+{% block menu_products %}active{% endblock %}
+
+{% block admin_content %}
+<div class="card shadow-sm border-0" style="border-radius: 12px;">
+    <div class="card-header bg-white py-3 border-bottom d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h5 class="m-0 font-weight-bold text-dark">Coffee Menu Items</h5>
+            <small class="text-muted">Total: {{ products|length }} active items</small>
+        </div>
+        <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+            <input type="text" id="productSearch" class="form-control form-control-sm mr-2" placeholder="Search coffee..." style="max-width: 200px;">
+            <a href="{% url 'add_product' %}" class="btn btn-warning btn-sm font-weight-bold text-white px-3" style="background-color: #da9f5b; border-color: #da9f5b;">
+                <i class="fa fa-plus-circle mr-1"></i> Add Product
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="productsTable">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="width: 70px;">Image</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th class="text-right" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                            {% else %}
+                            <img src="{% static 'img/menu-1.jpg' %}" alt="{{ product.name }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 8px; opacity: 0.7;">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong class="text-dark">{{ product.name }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge badge-{% if product.category == 'Hot Coffee' %}warning text-white{% else %}info{% endif %} px-2 py-1">
+                                {{ product.category }}
+                            </span>
+                        </td>
+                        <td>
+                            <strong class="text-success">₹{{ product.price }}</strong>
+                        </td>
+                        <td>
+                            <span class="text-muted small">{{ product.description|truncatechars:60|default:"No description." }}</span>
+                        </td>
+                        <td class="text-right">
+                            <a href="{% url 'edit_product' product.pk %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <form action="{% url 'delete_product' product.pk %}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete {{ product.name|escapejs }}?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fa fa-coffee fa-3x mb-3 text-secondary"></i>
+                            <p class="mb-2">No products added yet.</p>
+                            <a href="{% url 'add_product' %}" class="btn btn-sm btn-warning text-white font-weight-bold" style="background-color: #da9f5b;">
+                                Add Your First Product
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $('#productSearch').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#productsTable tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+</script>
+{% endblock %}

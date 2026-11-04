@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Client Testimonials - KOPPEE Coffee Shop{% endblock %}
+
+{% block content %}
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 position-relative overlay-bottom">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+        <h1 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase">Testimonials</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" href="{% url 'home' %}">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Testimonials</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Testimonial Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="section-title">
+            <h4 class="text-primary text-uppercase" style="letter-spacing: 5px;">Testimonial</h4>
+            <h1 class="display-4">Our Clients Say</h1>
+        </div>
+        <div class="owl-carousel testimonial-carousel">
+            <div class="testimonial-item">
+                <div class="d-flex align-items-center mb-3">
+                    <img class="img-fluid rounded-circle" src="{% static 'img/testimonial-1.jpg' %}" alt="Client" style="width: 70px; height: 70px;">
+                    <div class="ml-3">
+                        <h4 class="mb-0">Aarav Sharma</h4>
+                        <i class="text-muted">Software Architect</i>
+                    </div>
+                </div>
+                <p class="m-0 font-italic">"The pour-over Ethiopian roast here is unlike anything else in town. The serene aroma and cozy environment make it my daily workspace."</p>
+            </div>
+            <div class="testimonial-item">
+                <div class="d-flex align-items-center mb-3">
+                    <img class="img-fluid rounded-circle" src="{% static 'img/testimonial-2.jpg' %}" alt="Client" style="width: 70px; height: 70px;">
+                    <div class="ml-3">
+                        <h4 class="mb-0">Priya Patel</h4>
+                        <i class="text-muted">Creative Director</i>
+                    </div>
+                </div>
+                <p class="m-0 font-italic">"KOPPEE's cold brew has the smoothest chocolate finish. Excellent service and super easy table booking."</p>
+            </div>
+            <div class="testimonial-item">
+                <div class="d-flex align-items-center mb-3">
+                    <img class="img-fluid rounded-circle" src="{% static 'img/testimonial-3.jpg' %}" alt="Client" style="width: 70px; height: 70px;">
+                    <div class="ml-3">
+                        <h4 class="mb-0">Rohan Verma</h4>
+                        <i class="text-muted">Food Blogger</i>
+                    </div>
+                </div>
+                <p class="m-0 font-italic">"Hands down the finest espresso crema and latte art. The baristas treat coffee brewing as pure science and art."</p>
+            </div>
+            <div class="testimonial-item">
+                <div class="d-flex align-items-center mb-3">
+                    <img class="img-fluid rounded-circle" src="{% static 'img/testimonial-4.jpg' %}" alt="Client" style="width: 70px; height: 70px;">
+                    <div class="ml-3">
+                        <h4 class="mb-0">Sneha Rao</h4>
+                        <i class="text-muted">Entrepreneur</i>
+                    </div>
+                </div>
+                <p class="m-0 font-italic">"We host our team brainstorming sessions here every month. The reservation system is seamless and the staff is always welcoming."</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Testimonial End -->
+{% endblock %}

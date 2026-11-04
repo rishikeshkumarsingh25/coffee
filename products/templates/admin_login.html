@@ -1,0 +1,336 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Control Panel - KOPPEE</title>
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Bootstrap 4.6 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --admin-bg: #0f1117;
+            --admin-card: #181c26;
+            --admin-card-border: rgba(218, 159, 91, 0.25);
+            --primary-gold: #da9f5b;
+            --primary-gold-hover: #c4833f;
+            --text-light: #f3f4f6;
+            --text-dim: #9ca3af;
+            --input-bg: #11141e;
+            --input-border: #2c3344;
+            --danger-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: radial-gradient(circle at 50% 20%, #1e2433 0%, #0d0f15 80%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .admin-login-wrapper {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .admin-card {
+            background: var(--admin-card);
+            border-radius: 16px;
+            padding: 42px 36px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--admin-card-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #da9f5b, #ef4444, #da9f5b);
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .brand-logo-shield {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(218, 159, 91, 0.2), rgba(218, 159, 91, 0.05));
+            border: 1px solid rgba(218, 159, 91, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(218, 159, 91, 0.2);
+        }
+
+        .brand-logo-shield i {
+            color: var(--primary-gold);
+            font-size: 34px;
+        }
+
+        .admin-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: 1.5px;
+            color: #ffffff;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .admin-subtitle {
+            color: var(--text-dim);
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .info-pill {
+            background: rgba(218, 159, 91, 0.1);
+            border-left: 3px solid var(--primary-gold);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #e5e7eb;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #a1a1aa;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-group-text {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-right: none;
+            color: var(--primary-gold);
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            padding: 0 16px;
+        }
+
+        .admin-card .form-control {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-left: none;
+            color: #ffffff;
+            height: 52px;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .admin-card .form-control:focus {
+            background: #141824;
+            color: #ffffff;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(218, 159, 91, 0.25);
+        }
+
+        .admin-card .form-control::placeholder {
+            color: #52525b;
+            font-size: 13px;
+        }
+
+        .btn-admin-submit {
+            background: linear-gradient(135deg, #da9f5b 0%, #c4833f 100%);
+            color: #0f1117;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            height: 52px;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 8px 24px rgba(218, 159, 91, 0.35);
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-admin-submit:hover {
+            background: linear-gradient(135deg, #e5ae6d 0%, #da9f5b 100%);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(218, 159, 91, 0.45);
+        }
+
+        .switch-portal-box {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .switch-portal-link {
+            color: var(--text-dim);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .switch-portal-link:hover {
+            color: var(--primary-gold);
+            text-decoration: none;
+        }
+
+        .security-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #6b7280;
+            letter-spacing: 0.5px;
+        }
+
+        .messages-container {
+            margin-bottom: 20px;
+        }
+
+        .alert-dismissible .close {
+            color: inherit;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-login-wrapper">
+
+        <!-- Floating / Card Messages -->
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show shadow" role="alert">
+                <strong>
+                    {% if message.tags == 'success' %}<i class="fa fa-check-circle mr-1"></i>
+                    {% elif message.tags == 'error' %}<i class="fa fa-triangle-exclamation mr-1"></i>
+                    {% elif message.tags == 'warning' %}<i class="fa fa-shield-halved mr-1"></i>
+                    {% else %}<i class="fa fa-circle-info mr-1"></i>{% endif %}
+                </strong>
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="admin-card text-center">
+            <!-- Shield Logo -->
+            <div class="brand-logo-shield">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <!-- Security Badge -->
+            <div>
+                <span class="admin-badge">
+                    <i class="fa-solid fa-lock"></i> Restricted &bull; Staff Only
+                </span>
+            </div>
+
+            <!-- Headings -->
+            <h2 class="admin-title">Admin Control Panel</h2>
+            <p class="admin-subtitle">KOPPEE Restaurant Management &amp; Analytics</p>
+
+            <!-- Info Notice -->
+            <div class="info-pill">
+                <i class="fa-solid fa-bolt text-warning mr-2"></i>
+                <strong>Direct Admin Login:</strong> Valid email hona zaroori nahi hai. Koi bhi username ya email (e.g. <code>admin</code>) aur password daal kar seedhe login ho jaye. No OTP required!
+            </div>
+
+            <!-- Form -->
+            <form method="POST" action="{% url 'admin_login' %}">
+                {% csrf_token %}
+
+                {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+
+                <div class="form-group text-left mb-3">
+                    <label>Admin Username / Email (Valid email zaroori nahi)</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa-solid fa-user-gear"></i></span>
+                        </div>
+                        <input type="text" name="username_or_email" class="form-control" placeholder="Username ya Email (e.g. admin)" required autofocus autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group text-left mb-4">
+                    <label>Admin Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                        </div>
+                        <input type="password" name="password" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-admin-submit btn-block">
+                    <i class="fa-solid fa-gauge-high mr-2"></i> Authenticate &amp; Open Dashboard
+                </button>
+            </form>
+
+            <!-- Bottom Link to Customer Portal -->
+            <div class="switch-portal-box">
+                <a href="{% url 'login' %}" class="switch-portal-link d-inline-block mr-3">
+                    <i class="fa-solid fa-mug-hot mr-1"></i> Customer Login Portal
+                </a>
+                <span class="text-secondary">&bull;</span>
+                <a href="{% url 'home' %}" class="switch-portal-link d-inline-block ml-3">
+                    <i class="fa-solid fa-house mr-1"></i> View Website
+                </a>
+            </div>
+        </div>
+
+        <div class="security-footer">
+            <i class="fa-solid fa-shield mr-1"></i> Koppee Admin Security Gateway &bull; Unauthorized access prohibited
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

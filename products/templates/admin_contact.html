@@ -1,0 +1,77 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Contact Inquiries - KOPPEE Admin{% endblock %}
+{% block page_title %}Customer Inquiries & Messages{% endblock %}
+{% block menu_contacts %}active{% endblock %}
+
+{% block admin_content %}
+<div class="card shadow-sm border-0" style="border-radius: 12px;">
+    <div class="card-header bg-white py-3 border-bottom d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h5 class="m-0 font-weight-bold text-dark">Received Inquiries</h5>
+            <small class="text-muted">Total: {{ all_contacts|length }} customer messages</small>
+        </div>
+        <div>
+            <input type="text" id="contactSearch" class="form-control form-control-sm" placeholder="Search inquiries..." style="max-width: 250px;">
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="contactsTable">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Sender</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Message Preview</th>
+                        <th class="text-right" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for con in all_contacts %}
+                    <tr>
+                        <td><strong class="text-dark">{{ con.name }}</strong></td>
+                        <td><a href="mailto:{{ con.email }}" class="text-secondary">{{ con.email }}</a></td>
+                        <td><span class="badge badge-light border text-dark font-weight-bold">{{ con.subject }}</span></td>
+                        <td><span class="text-muted small">{{ con.message|truncatechars:70 }}</span></td>
+                        <td class="text-right">
+                            <a href="{% url 'view_contact' con.pk %}" class="btn btn-sm btn-outline-info" title="Read Full Message">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <a href="{% url 'edit_contact' con.pk %}" class="btn btn-sm btn-outline-primary" title="Edit Note">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <form action="{% url 'delete_contact' con.pk %}" method="POST" style="display: inline;" onsubmit="return confirm('Delete inquiry from {{ con.name|escapejs }}?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i class="fa fa-inbox fa-3x mb-3 text-secondary"></i>
+                            <p class="mb-0">No customer messages received yet.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $('#contactSearch').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#contactsTable tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,228 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - KOPPEE Admin{% endblock %}
+{% block page_title %}Overview & Analytics{% endblock %}
+{% block menu_dashboard %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .stat-card-link {
+        display: block;
+        text-decoration: none !important;
+        color: inherit !important;
+        cursor: pointer;
+        transition: all 0.25s ease-in-out;
+        border: 1px solid #eef0f5;
+        position: relative;
+        overflow: hidden;
+    }
+    .stat-card-link:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.09) !important;
+        text-decoration: none !important;
+        border-color: #da9f5b;
+    }
+    .stat-card-link .stat-arrow {
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: all 0.2s ease-in-out;
+        color: #da9f5b;
+        font-size: 13px;
+    }
+    .stat-card-link:hover .stat-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .clickable-row {
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+    }
+    .clickable-row:hover {
+        background-color: rgba(218, 159, 91, 0.08) !important;
+    }
+</style>
+{% endblock %}
+
+{% block admin_content %}
+<!-- Metrics Summary Cards (All Clickable) -->
+<div class="row mb-4">
+    <!-- Products Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="{% url 'product_list' %}" class="stat-card stat-card-link shadow-sm" title="Click to view all Menu Products">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <small class="text-muted font-weight-bold text-uppercase" style="letter-spacing: 1px;">Menu Products</small>
+                    <h2 class="font-weight-bold text-dark mt-1 mb-0">{{ products|default:"0" }}</h2>
+                </div>
+                <div class="stat-icon bg-coffee-light">
+                    <i class="fa fa-coffee"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top">
+                <span class="small text-muted">View all products</span>
+                <span class="stat-arrow font-weight-bold">Open <i class="fa fa-arrow-right ml-1"></i></span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Reservations Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="{% url 'reservations_page' %}" class="stat-card stat-card-link shadow-sm" title="Click to manage Table Reservations">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <small class="text-muted font-weight-bold text-uppercase" style="letter-spacing: 1px;">Reservations</small>
+                    <h2 class="font-weight-bold text-dark mt-1 mb-0">{{ reservations|default:"0" }}</h2>
+                </div>
+                <div class="stat-icon bg-green-light">
+                    <i class="fa fa-calendar-check"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top">
+                <span class="small text-muted">Manage reservations</span>
+                <span class="stat-arrow font-weight-bold">Open <i class="fa fa-arrow-right ml-1"></i></span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Customer Inquiries / Contacts Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="{% url 'contacts_page' %}" class="stat-card stat-card-link shadow-sm" title="Click to read Customer Messages">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <small class="text-muted font-weight-bold text-uppercase" style="letter-spacing: 1px;">Customer Inquiries</small>
+                    <h2 class="font-weight-bold text-dark mt-1 mb-0">{{ contacts|default:"0" }}</h2>
+                </div>
+                <div class="stat-icon bg-blue-light">
+                    <i class="fa fa-comments"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top">
+                <span class="small text-muted">View all messages</span>
+                <span class="stat-arrow font-weight-bold">Open <i class="fa fa-arrow-right ml-1"></i></span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Registered Users Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="{% url 'users_page' %}" class="stat-card stat-card-link shadow-sm" title="Click to manage Registered Users">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <small class="text-muted font-weight-bold text-uppercase" style="letter-spacing: 1px;">Registered Users</small>
+                    <h2 class="font-weight-bold text-dark mt-1 mb-0">{{ users|default:"0" }}</h2>
+                </div>
+                <div class="stat-icon bg-purple-light">
+                    <i class="fa fa-users"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top">
+                <span class="small text-muted">Manage user accounts</span>
+                <span class="stat-arrow font-weight-bold">Open <i class="fa fa-arrow-right ml-1"></i></span>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Recent Activity Tables -->
+<div class="row">
+    <!-- Recent Reservations -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-dark">
+                    <i class="fa fa-clock text-warning mr-2"></i> Recent Reservations
+                </h6>
+                <a href="{% url 'reservations_page' %}" class="btn btn-sm btn-light">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Guest</th>
+                                <th>Date & Time</th>
+                                <th>Guests</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for res in recent_reservations %}
+                            <tr class="clickable-row" onclick="window.location='{% url 'view_reservation' res.pk %}'">
+                                <td>
+                                    <strong class="text-dark">{{ res.name }}</strong><br>
+                                    <small class="text-muted">{{ res.email }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-light border">{{ res.date }}</span>
+                                    <small class="d-block text-muted">{{ res.time }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-info">{{ res.person }} Persons</span>
+                                </td>
+                                <td class="text-right">
+                                    <a href="{% url 'view_reservation' res.pk %}" class="btn btn-sm btn-outline-secondary" onclick="event.stopPropagation();">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No reservations booked yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Contacts -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-dark">
+                    <i class="fa fa-envelope text-primary mr-2"></i> Recent Inquiries
+                </h6>
+                <a href="{% url 'contacts_page' %}" class="btn btn-sm btn-light">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Sender</th>
+                                <th>Subject</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for con in recent_contacts %}
+                            <tr class="clickable-row" onclick="window.location='{% url 'view_contact' con.pk %}'">
+                                <td>
+                                    <strong class="text-dark">{{ con.name }}</strong><br>
+                                    <small class="text-muted">{{ con.email }}</small>
+                                </td>
+                                <td>
+                                    <span class="text-dark font-weight-500">{{ con.subject|truncatechars:35 }}</span>
+                                </td>
+                                <td class="text-right">
+                                    <a href="{% url 'view_contact' con.pk %}" class="btn btn-sm btn-outline-secondary" onclick="event.stopPropagation();">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">No messages received yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

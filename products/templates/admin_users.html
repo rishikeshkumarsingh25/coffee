@@ -1,0 +1,108 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Registered Users - KOPPEE Admin{% endblock %}
+{% block page_title %}Registered Users Management{% endblock %}
+{% block menu_users %}active{% endblock %}
+
+{% block admin_content %}
+<div class="card shadow-sm border-0" style="border-radius: 12px;">
+    <div class="card-header bg-white py-3 border-bottom d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h5 class="m-0 font-weight-bold text-dark">User Accounts</h5>
+            <small class="text-muted">Total: {{ all_users|length }} registered accounts</small>
+        </div>
+        <div class="d-flex align-items-center mt-2 mt-sm-0">
+            <input type="text" id="userSearch" class="form-control form-control-sm mr-2" placeholder="Search by email..." style="max-width: 220px;">
+            <a href="{% url 'create_admin' %}" class="btn btn-sm btn-primary font-weight-bold px-3 py-2 shadow-sm" style="white-space: nowrap; border-radius: 6px;">
+                <i class="fa fa-user-shield mr-1"></i> + Create Admin
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="usersTable">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email Address</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Date Joined</th>
+                        <th class="text-right" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in all_users %}
+                    <tr>
+                        <td><small class="text-muted">#{{ u.id }}</small></td>
+                        <td>
+                            <strong class="text-dark">{{ u.email }}</strong>
+                        </td>
+                        <td>
+                            {{ u.first_name }} {{ u.last_name|default:"" }}
+                            {% if not u.first_name and not u.last_name %}
+                            <span class="text-muted font-italic">Not specified</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if u.is_superuser %}
+                            <span class="badge badge-danger px-2 py-1"><i class="fa fa-crown mr-1"></i> Superadmin</span>
+                            {% elif u.is_staff %}
+                            <span class="badge badge-warning text-white px-2 py-1"><i class="fa fa-user-shield mr-1"></i> Staff Admin</span>
+                            {% else %}
+                            <span class="badge badge-secondary px-2 py-1"><i class="fa fa-user mr-1"></i> Customer</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if u.is_active %}
+                            <span class="badge badge-success px-2 py-1"><i class="fa fa-check mr-1"></i> Active</span>
+                            {% else %}
+                            <span class="badge badge-danger px-2 py-1"><i class="fa fa-ban mr-1"></i> Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ u.date_joined|date:"M d, Y H:i" }}</small>
+                        </td>
+                        <td class="text-right">
+                            {% if u != request.user %}
+                            <form action="{% url 'toggle_user_status' u.pk %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-{% if u.is_active %}warning{% else %}success{% endif %}" title="{% if u.is_active %}Deactivate Account{% else %}Activate Account{% endif %}">
+                                    <i class="fa fa-{% if u.is_active %}ban{% else %}check{% endif %}"></i>
+                                </button>
+                            </form>
+                            <form action="{% url 'delete_user' u.pk %}" method="POST" style="display: inline;" onsubmit="return confirm('Permanently delete user {{ u.email|escapejs }}?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete User">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                            {% else %}
+                            <span class="badge badge-light border text-muted">Current User</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">No users found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $('#userSearch').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#usersTable tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+</script>
+{% endblock %}

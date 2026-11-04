@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Customer Sign In - KOPPEE Coffee Shop{% endblock %}
+
+{% block extra_head %}
+<style>
+    .customer-auth-container {
+        padding: 50px 0 80px;
+    }
+    .customer-card {
+        max-width: 490px;
+        margin: 0 auto;
+        padding: 42px 38px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 15px 45px rgba(51, 33, 29, 0.12);
+        border-top: 5px solid #da9f5b;
+        position: relative;
+    }
+    .customer-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(218, 159, 91, 0.15);
+        color: #b87528;
+        border: 1px solid rgba(218, 159, 91, 0.4);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+    .customer-title {
+        color: #33211d;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 26px;
+        margin-bottom: 6px;
+    }
+    .customer-subtitle {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+    .customer-card .form-control {
+        height: 52px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        font-size: 15px;
+        transition: all 0.2s;
+    }
+    .customer-card .form-control:focus {
+        border-color: #da9f5b;
+        box-shadow: 0 0 0 3px rgba(218, 159, 91, 0.2);
+    }
+    .customer-card .input-group-text {
+        background: #fdfbf7;
+        border: 1px solid #e2e8f0;
+        border-right: none;
+        color: #da9f5b;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        padding: 0 16px;
+    }
+    .btn-customer-login {
+        background: #da9f5b;
+        border-color: #da9f5b;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 1px;
+        padding: 14px;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+    .btn-customer-login:hover {
+        background: #c4833f;
+        border-color: #c4833f;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(218, 159, 91, 0.35);
+    }
+    .new-user-box {
+        background: #fcfaf6;
+        border: 1px dashed rgba(218, 159, 91, 0.4);
+        border-radius: 10px;
+        padding: 16px;
+        margin-top: 24px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container customer-auth-container">
+    <div class="customer-card">
+        <!-- Header -->
+        <div class="text-center">
+            <span class="customer-badge">
+                <i class="fa fa-coffee"></i> Customer Portal
+            </span>
+            <h3 class="customer-title">Welcome Back</h3>
+            <p class="customer-subtitle">Sign in to book tables &amp; browse delicious café roasts</p>
+        </div>
+
+        <!-- Customer Login Form -->
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
+            <div class="form-group mb-3">
+                <label class="font-weight-bold small text-muted">CUSTOMER EMAIL</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                    </div>
+                    <input type="email" name="email" class="form-control" placeholder="your-email@example.com" required autofocus autocomplete="email">
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label class="font-weight-bold small text-muted m-0">PASSWORD</label>
+                    <a href="{% url 'forgot_password' %}" class="small font-weight-bold" style="color: #da9f5b;">Forgot password?</a>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    </div>
+                    <input type="password" name="password" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-customer-login btn-block">
+                <i class="fa fa-sign-in-alt mr-2"></i> Sign In as Customer
+            </button>
+        </form>
+
+        <!-- New Customer / Registration Callout -->
+        <div class="new-user-box">
+            <p class="small text-muted mb-2">
+                <strong>New Customer?</strong> Verify with OTP once to activate your account.
+            </p>
+            <a href="{% url 'signup' %}" class="btn btn-outline-dark btn-sm font-weight-bold px-3">
+                <i class="fa fa-user-plus mr-1"></i> Register New Customer Account
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

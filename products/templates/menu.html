@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Coffee Menu & Pricing - KOPPEE{% endblock %}
+{% block nav_menu %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* =========================
+       MENU DESIGN
+    ========================= */
+    .coffee-menu-section {
+        padding: 40px 0 70px;
+    }
+    .coffee-menu-column {
+        padding: 0 35px;
+    }
+
+    /* =========================
+       HOT / COLD TITLE
+    ========================= */
+    .coffee-menu-title {
+        font-size: 42px;
+        font-weight: 700;
+        color: #3b2521;
+        margin-bottom: 45px;
+        position: relative;
+        display: inline-block;
+    }
+
+    /* =========================
+       COFFEE ITEM
+    ========================= */
+    .coffee-item {
+        display: flex;
+        align-items: center;
+        min-height: 150px;
+        margin-bottom: 28px;
+        padding-bottom: 10px;
+        border-bottom: none !important;
+        transition: transform 0.2s ease;
+    }
+    .coffee-item:hover {
+        transform: translateX(4px);
+    }
+
+    /* =========================
+       IMAGE AREA
+    ========================= */
+    .coffee-image-area {
+        width: 180px;
+        min-width: 180px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    /* =========================
+       PRODUCT IMAGE
+    ========================= */
+    .coffee-image {
+        width: 130px !important;
+        height: 130px !important;
+        min-width: 130px;
+        min-height: 130px;
+        max-width: 130px;
+        max-height: 130px;
+        object-fit: cover;
+        border-radius: 50% !important;
+        display: block;
+        border: 3px solid #e3a653;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* =========================
+       PRICE CIRCLE
+    ========================= */
+    .coffee-price {
+        position: absolute;
+        top: 0;
+        right: 8px;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: #e5a451;
+        color: #241815;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 700;
+        z-index: 5;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    /* =========================
+       PRODUCT CONTENT
+    ========================= */
+    .coffee-content {
+        flex: 1;
+        min-width: 0;
+        padding-left: 15px;
+    }
+    .coffee-content h4 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #211512;
+        margin: 0 0 8px 0;
+    }
+    .coffee-content p {
+        font-size: 15px;
+        color: #685e59;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .no-product {
+        color: #888;
+        font-style: italic;
+        padding: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+        .coffee-menu-column {
+            padding: 0 15px;
+            margin-bottom: 30px;
+        }
+        .coffee-menu-title {
+            font-size: 32px;
+            margin-bottom: 25px;
+        }
+        .coffee-image-area {
+            width: 120px;
+            min-width: 120px;
+        }
+        .coffee-image {
+            width: 95px !important;
+            height: 95px !important;
+            min-width: 95px;
+            min-height: 95px;
+        }
+        .coffee-price {
+            width: 46px;
+            height: 46px;
+            font-size: 13px;
+            right: 0;
+        }
+        .coffee-content h4 {
+            font-size: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 position-relative overlay-bottom">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+        <h1 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase">Menu & Pricing</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" href="{% url 'home' %}">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Menu</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Menu Section Start -->
+<div class="container-fluid pt-5 coffee-menu-section">
+    <div class="container">
+        <div class="section-title">
+            <h4 class="text-primary text-uppercase" style="letter-spacing: 5px;">Menu & Pricing</h4>
+            <h1 class="display-4">Fresh Roasted Coffee</h1>
+        </div>
+
+        <div class="row">
+            <!-- HOT COFFEE -->
+            <div class="col-lg-6 coffee-menu-column">
+                <h1 class="coffee-menu-title">Hot Coffee</h1>
+                {% for product in products %}
+                    {% if product.category == "Hot Coffee" %}
+                    <div class="coffee-item">
+                        <div class="coffee-image-area">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="coffee-image">
+                            {% else %}
+                                <img src="{% static 'img/menu-1.jpg' %}" alt="{{ product.name }}" class="coffee-image">
+                            {% endif %}
+                            <div class="coffee-price">₹{{ product.price|floatformat:0 }}</div>
+                        </div>
+                        <div class="coffee-content">
+                            <h4>{{ product.name }}</h4>
+                            <p>{{ product.description|default:"Steamed to perfection with fresh espresso roast." }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% empty %}
+                    <p class="no-product">No Hot Coffee items added yet.</p>
+                {% endfor %}
+            </div>
+
+            <!-- COLD COFFEE -->
+            <div class="col-lg-6 coffee-menu-column">
+                <h1 class="coffee-menu-title">Cold Coffee</h1>
+                {% for product in products %}
+                    {% if product.category == "Cold Coffee" %}
+                    <div class="coffee-item">
+                        <div class="coffee-image-area">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="coffee-image">
+                            {% else %}
+                                <img src="{% static 'img/menu-2.jpg' %}" alt="{{ product.name }}" class="coffee-image">
+                            {% endif %}
+                            <div class="coffee-price">₹{{ product.price|floatformat:0 }}</div>
+                        </div>
+                        <div class="coffee-content">
+                            <h4>{{ product.name }}</h4>
+                            <p>{{ product.description|default:"Chilled single-origin brew poured over ice." }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% empty %}
+                    <p class="no-product">No Cold Coffee items added yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'reservation' %}" class="btn btn-primary font-weight-bold py-3 px-5" style="border-radius: 30px;">
+                <i class="fa fa-calendar-alt mr-2"></i> Reserve A Table Now
+            </a>
+        </div>
+    </div>
+</div>
+<!-- Menu Section End -->
+{% endblock %}

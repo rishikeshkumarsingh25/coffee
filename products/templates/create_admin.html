@@ -1,0 +1,183 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Create Administrator - KOPPEE Admin{% endblock %}
+{% block page_title %}Create Administrator Account{% endblock %}
+{% block menu_create_admin %}active{% endblock %}
+
+{% block admin_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="m-0 font-weight-bold text-dark">
+                        <i class="fa fa-user-shield text-primary mr-2"></i>New Administrator Details
+                    </h5>
+                    <small class="text-muted">Create a privileged administrator account with instant dashboard access</small>
+                </div>
+                <a href="{% url 'users_page' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-arrow-left mr-1"></i> Back to Users
+                </a>
+            </div>
+
+            <div class="card-body p-4">
+                <!-- Info Notice -->
+                <div class="alert alert-info border-0 shadow-sm mb-4" style="border-radius: 8px;">
+                    <div class="d-flex">
+                        <i class="fa fa-info-circle fa-2x mr-3 text-info"></i>
+                        <div>
+                            <strong class="d-block mb-1">Administrator Privileges & Format:</strong>
+                            <ul class="mb-0 pl-3 small">
+                                <li><strong>No valid email required:</strong> You can enter any username (e.g. <code>admin2</code>, <code>manager</code>, <code>supervisor</code>) or any email address.</li>
+                                <li><strong>No email verification or OTP:</strong> Admin accounts are activated immediately upon creation.</li>
+                                <li><strong>Direct Sign-In:</strong> Once created, this administrator can log in directly at <code>/admin</code> or <code>/admin-login/</code> using just their username and password.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST" action="{% url 'create_admin' %}" autocomplete="off">
+                    {% csrf_token %}
+
+                    <!-- Username / Email Field -->
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold text-muted small">
+                            ADMIN USERNAME OR EMAIL <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user-tag text-muted"></i></span>
+                            </div>
+                            <input type="text"
+                                   name="username_or_email"
+                                   class="form-control form-control-lg {% if form.username_or_email.errors %}is-invalid{% endif %}"
+                                   placeholder="e.g. admin2, manager, or admin@koppee.com"
+                                   value="{{ form.username_or_email.value|default:'' }}"
+                                   required
+                                   autofocus>
+                        </div>
+                        <small class="form-text text-muted">
+                            Can be any string or username (does not need @ or domain).
+                        </small>
+                        {% if form.username_or_email.errors %}
+                        <div class="invalid-feedback d-block font-weight-bold">
+                            {{ form.username_or_email.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Role Selection -->
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold text-muted small">
+                            ADMINISTRATOR ROLE <span class="text-danger">*</span>
+                        </label>
+                        <select name="role" class="custom-select custom-select-lg">
+                            <option value="superuser" {% if form.role.value == 'superuser' or not form.role.value %}selected{% endif %}>
+                                👑 Superadmin (Full system access, product editing & user management)
+                            </option>
+                            <option value="staff" {% if form.role.value == 'staff' %}selected{% endif %}>
+                                🛡️ Staff Admin (Dashboard metrics, product management & reservations)
+                            </option>
+                        </select>
+                        <small class="form-text text-muted">
+                            Both roles grant access to the admin dashboard, strictly restricted from customers.
+                        </small>
+                    </div>
+
+                    <!-- First and Last Name (Optional) -->
+                    <div class="form-row mb-3">
+                        <div class="col-md-6 form-group mb-3 mb-md-0">
+                            <label class="font-weight-bold text-muted small">FIRST NAME</label>
+                            <input type="text"
+                                   name="first_name"
+                                   class="form-control"
+                                   placeholder="First name (optional)"
+                                   value="{{ form.first_name.value|default:'' }}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-bold text-muted small">LAST NAME</label>
+                            <input type="text"
+                                   name="last_name"
+                                   class="form-control"
+                                   placeholder="Last name (optional)"
+                                   value="{{ form.last_name.value|default:'' }}">
+                        </div>
+                    </div>
+
+                    <!-- Password and Confirm Password -->
+                    <div class="form-row mb-3">
+                        <div class="col-md-6 form-group mb-3 mb-md-0">
+                            <label class="font-weight-bold text-muted small">
+                                PASSWORD <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock text-muted"></i></span>
+                                </div>
+                                <input type="password"
+                                       name="password"
+                                       class="form-control form-control-lg {% if form.password.errors %}is-invalid{% endif %}"
+                                       placeholder="Min 6 characters"
+                                       required>
+                            </div>
+                            {% if form.password.errors %}
+                            <div class="invalid-feedback d-block font-weight-bold">
+                                {{ form.password.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-bold text-muted small">
+                                CONFIRM PASSWORD <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-shield-alt text-muted"></i></span>
+                                </div>
+                                <input type="password"
+                                       name="confirm_password"
+                                       class="form-control form-control-lg {% if form.confirm_password.errors %}is-invalid{% endif %}"
+                                       placeholder="Repeat password"
+                                       required>
+                            </div>
+                            {% if form.confirm_password.errors %}
+                            <div class="invalid-feedback d-block font-weight-bold">
+                                {{ form.confirm_password.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Account Active Status -->
+                    <div class="form-group mb-4">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox"
+                                   name="is_active"
+                                   class="custom-control-input"
+                                   id="isActiveSwitch"
+                                   checked>
+                            <label class="custom-control-label font-weight-bold text-dark" for="isActiveSwitch">
+                                Active Account (Ready for immediate login)
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">
+                            Active accounts can sign in right away without any activation link or OTP.
+                        </small>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                        <a href="{% url 'users_page' %}" class="btn btn-outline-secondary font-weight-bold px-4 py-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary font-weight-bold px-4 py-2 shadow-sm" style="border-radius: 6px;">
+                            <i class="fa fa-user-plus mr-1"></i> Create Administrator
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Your Table - KOPPEE Coffee Shop{% endblock %}
+{% block nav_reservation %}active{% endblock %}
+
+{% block content %}
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 position-relative overlay-bottom">
+    <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+        <h1 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase">Reservation</h1>
+        <div class="d-inline-flex mb-lg-5">
+            <p class="m-0 text-white"><a class="text-white" href="{% url 'home' %}">Home</a></p>
+            <p class="m-0 text-white px-2">/</p>
+            <p class="m-0 text-white">Reservation</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Reservation Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="reservation position-relative overlay-top overlay-bottom" style="background: url('{% static 'img/bg.jpg' %}') center center no-repeat; background-size: cover; border-radius: 12px; overflow: hidden;">
+            <div class="row align-items-center">
+                <div class="col-lg-6 my-5 my-lg-0">
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <h1 class="display-3 text-primary">30% OFF</h1>
+                            <h1 class="text-white">Online Reservation Special</h1>
+                        </div>
+                        <p class="text-white">Reserve your preferred seating slot ahead of time. Experience cozy ambiances, reserved barista table-side tastings, and express service.</p>
+                        <ul class="list-inline text-white m-0">
+                            <li class="py-2"><i class="fa fa-check text-primary mr-3"></i>Guaranteed table ready upon your arrival</li>
+                            <li class="py-2"><i class="fa fa-check text-primary mr-3"></i>Complimentary tasting pour of seasonal single origins</li>
+                            <li class="py-2"><i class="fa fa-check text-primary mr-3"></i>No booking charges or cancellation penalties</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="text-center p-5" style="background: rgba(51, 33, 29, .85);">
+                        <h1 class="text-white mb-4 mt-3">Book Your Table</h1>
+
+                        <form method="POST" action="{% url 'reservation' %}" class="mb-3 text-left">
+                            {% csrf_token %}
+
+                            <div class="form-group mb-3">
+                                <label class="text-white-50 small font-weight-bold">YOUR NAME</label>
+                                <input type="text" name="name" class="form-control bg-transparent text-white border-primary p-4" placeholder="Full Name" required value="{% if user.is_authenticated %}{{ user.first_name }} {{ user.last_name|default:'' }}{% endif %}">
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="text-white-50 small font-weight-bold">EMAIL ADDRESS</label>
+                                <input type="email" name="email" class="form-control bg-transparent text-white border-primary p-4" placeholder="Your Email" required value="{% if user.is_authenticated %}{{ user.email }}{% endif %}">
+                            </div>
+
+                            <div class="form-row mb-3">
+                                <div class="col-md-6 form-group">
+                                    <label class="text-white-50 small font-weight-bold">DATE</label>
+                                    <input type="date" name="date" class="form-control bg-transparent text-white border-primary p-4" required>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="text-white-50 small font-weight-bold">TIME</label>
+                                    <input type="time" name="time" class="form-control bg-transparent text-white border-primary p-4" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label class="text-white-50 small font-weight-bold">NUMBER OF GUESTS</label>
+                                <select name="person" class="custom-select bg-transparent text-white border-primary px-4" style="height: 49px;" required>
+                                    <option value="" disabled selected class="text-dark">Select Party Size</option>
+                                    <option value="1" class="text-dark">1 Person (Solo Coffee)</option>
+                                    <option value="2" class="text-dark">2 Persons (Couple)</option>
+                                    <option value="3" class="text-dark">3 Persons</option>
+                                    <option value="4" class="text-dark">4 Persons (Family/Friends)</option>
+                                    <option value="5" class="text-dark">5 Persons</option>
+                                    <option value="6" class="text-dark">6+ Persons (Group Table)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <button class="btn btn-primary btn-block font-weight-bold py-3" type="submit">
+                                    <i class="fa fa-calendar-check mr-2"></i> Confirm Booking Now
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Reservation End -->
+{% endblock %}
