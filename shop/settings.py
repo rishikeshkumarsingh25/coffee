@@ -19,10 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DJANGO CORE SETTINGS
 # =====================================
 
-SECRET_KEY = config(
-    'SECRET_KEY',
-    default='django-insecure-!v8mbgv+%k+t9m3nu+_6w-j9!v#!xeekjlm%bh&%s+jd_zj7!c'
-)
+SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
@@ -232,7 +229,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # =====================================
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 USE_TZ = True
